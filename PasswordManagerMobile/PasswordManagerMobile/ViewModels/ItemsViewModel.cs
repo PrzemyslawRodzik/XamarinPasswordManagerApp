@@ -21,6 +21,7 @@ namespace PasswordManagerMobile.ViewModels
         public Command AddItemCommand { get; }
         
         public Command<LoginData> ItemTapped { get; }
+        public Command<LoginData> ItemSwiped { get; }
         
         
 
@@ -35,13 +36,19 @@ namespace PasswordManagerMobile.ViewModels
             ItemTapped = new Command<LoginData>(OnItemSelected);
             this.PropertyChanged +=
                  (_, __) => ItemTapped.ChangeCanExecute();
+            ItemSwiped = new Command<LoginData>(OnItemSwiped);
+            this.PropertyChanged +=
+                 (_, __) => ItemSwiped.ChangeCanExecute();
 
-            AddItemCommand = new Command(OnAddItem);
+            AddItemCommand = new Command(OnAddItem,CanExecute);
             this.PropertyChanged +=
                  (_, __) => AddItemCommand.ChangeCanExecute();
 
         }
-        
+        private bool CanExecute(object obj)
+        {
+            return !IsBusy;
+        }
         
 
         async Task ExecuteLoadItemsCommand()
@@ -97,6 +104,7 @@ namespace PasswordManagerMobile.ViewModels
         private  void OnAddItem(object obj)
         {
             IsBusy = true;
+            
             App.Current.MainPage.Navigation.PushModalAsync(new NewItemPage());
             IsBusy = false;
                
@@ -115,6 +123,11 @@ namespace PasswordManagerMobile.ViewModels
             // await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
 
             IsBusy = false;
+            await App.Current.MainPage.Navigation.PushModalAsync(new ItemDetailPage(item.Id));
+        }
+        async void OnItemSwiped(LoginData item)
+        {
+            
             await App.Current.MainPage.Navigation.PushModalAsync(new ItemDetailPage(item.Id));
         }
     }

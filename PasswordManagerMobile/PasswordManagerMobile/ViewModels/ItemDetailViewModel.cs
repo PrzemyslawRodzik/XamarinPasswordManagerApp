@@ -30,6 +30,13 @@ namespace PasswordManagerMobile.ViewModels
             this.PropertyChanged +=
                  (_, __) => UpdateCommand.ChangeCanExecute();
         }
+
+        public void OnAppearing()
+        {
+            IsBusy = true;
+            LoadItemId(ItemId);
+            IsBusy = false;
+        }
         private bool CanExecute()
         {
             return !IsBusy;

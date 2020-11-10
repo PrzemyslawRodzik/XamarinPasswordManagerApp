@@ -23,6 +23,7 @@ namespace PasswordManagerMobile.Views
             });
             this.BindingContext = new LoginViewModel(new ApiService());
         }
+         
 
     }
 }
