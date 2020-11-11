@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PasswordManagerMobile.Views.ItemSharePage"
+             Shell.PresentationMode="ModalAnimated"
+             Title="Share login data">
+    <ContentPage.Content>
+        <StackLayout Spacing="3" Padding="15">
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+            <Label Text="Receiver" FontSize="Medium" />
+            <Entry Text="{Binding ReceiverEmail, Mode=TwoWay}" FontSize="Medium" />
+            <Label Text="Expire date" FontSize="Medium" />
+            <Editor Text="{Binding ExpireDate, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
+           
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button Text="Save" Command="{Binding ShareCommand}" HorizontalOptions="FillAndExpand"></Button>
+               
+            </StackLayout>
+            
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>

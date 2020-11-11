@@ -1,6 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using PasswordGenerator;
+using PasswordManagerApp.Handlers;
 using PasswordManagerMobile.Helpers;
 using PasswordManagerMobile.Models;
 using Xamarin.Forms;
@@ -22,6 +29,8 @@ namespace PasswordManagerMobile.ViewModels
         public string Id { get; set; }
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
+        public Command GeneratePasswordCommand { get; }
+        public Command HibpCheckCommand { get; }
 
         public ItemUpdateViewModel(int itemId)
         {
@@ -32,6 +41,12 @@ namespace PasswordManagerMobile.ViewModels
             CancelCommand = new Command(OnCancel);
             this.PropertyChanged +=
                  (_, __) => CancelCommand.ChangeCanExecute();
+            GeneratePasswordCommand = new Command(OnGeneratePassword);
+            HibpCheckCommand = new Command(OnHibpCheck);
+
+
+
+            
         }
 
         
@@ -132,6 +147,25 @@ namespace PasswordManagerMobile.ViewModels
                 Debug.WriteLine("Failed to Load Item");
             }
         }
+        private void OnGeneratePassword()
+        {
+            Password =  new Password(true, true, true, true, 16).Next();
+        }
         
+        public void OnHibpCheck()
+        {
+            
+            
+
+
+            var hibpResult = PwnedPasswords.IsPasswordPwnedAsync(password, new CancellationToken(), null);
+            
+            if (hibpResult <= 0)
+                Password =  "Your password is OK :)";
+            else
+                Password =  $"Your password have been pwned {hibpResult}. Please, change your password.";
+           
+        }
+
     }
 }

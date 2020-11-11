@@ -6,6 +6,7 @@
              Title="Update login data">
     <ContentPage.Content>
         <StackLayout Spacing="3" Padding="15">
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
             <Label Text="Name" FontSize="Medium" />
             <Entry Text="{Binding Name, Mode=TwoWay}" FontSize="Medium" />
             <Label Text="Login" FontSize="Medium" />
@@ -19,7 +20,15 @@
             <StackLayout Orientation="Horizontal">
                 <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
                 <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button Text="GeneratePassword" Command="{Binding GeneratePasswordCommand}" HorizontalOptions="FillAndExpand"></Button>
+                
+
+
+                
+
+
             </StackLayout>
+            <Button Text="CheckPassword" Command="{Binding HibpCheckCommand}" HorizontalOptions="FillAndExpand"></Button>
         </StackLayout>
     </ContentPage.Content>
 

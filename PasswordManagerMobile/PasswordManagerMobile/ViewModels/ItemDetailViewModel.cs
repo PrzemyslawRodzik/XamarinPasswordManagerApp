@@ -22,6 +22,7 @@ namespace PasswordManagerMobile.ViewModels
         
         public string Id { get; set; }
         public Command UpdateCommand { get; }
+        public Command ShareCommand { get; set; }
 
         public ItemDetailViewModel(int itemId)
         {
@@ -29,6 +30,8 @@ namespace PasswordManagerMobile.ViewModels
             UpdateCommand = new Command(OnUpdateItem, CanExecute);
             this.PropertyChanged +=
                  (_, __) => UpdateCommand.ChangeCanExecute();
+            ShareCommand = new Command(OnShareItem);
+            
         }
 
         public void OnAppearing()
@@ -106,5 +109,16 @@ namespace PasswordManagerMobile.ViewModels
             await App.Current.MainPage.Navigation.PushModalAsync(new ItemUpdatePage(ItemId));
             IsBusy = false;
         }
+        private async void OnShareItem()
+        {
+            IsBusy = true;
+            await App.Current.MainPage.Navigation.PushModalAsync(new ItemSharePage(ItemId));
+            IsBusy = false;
+        }
+
+
+
+
+        
     }
 }

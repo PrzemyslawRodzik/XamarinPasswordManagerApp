@@ -19,6 +19,7 @@
         <Label Text="Email:" FontSize="Medium" />
         <Label Text="{Binding Email}" FontSize="Small"/>
         <Button Text="Update" Command="{Binding UpdateCommand}"/>
+        <Button Text="Share" Command="{Binding ShareCommand}"/>
     </StackLayout>
     
 </ContentPage>

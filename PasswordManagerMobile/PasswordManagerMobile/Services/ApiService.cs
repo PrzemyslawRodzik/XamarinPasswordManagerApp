@@ -36,8 +36,8 @@ namespace PasswordManagerApp.Services
                 return true;
             }
             });
-           // _client.BaseAddress = new Uri("https://192.168.1.100:5006/api/");
-            _client.BaseAddress = new Uri("https://10.0.2.2:5006/api/");
+            _client.BaseAddress = new Uri("https://192.168.1.100:5006/api/");
+           // _client.BaseAddress = new Uri("https://10.0.2.2:5006/api/");
             _client.DefaultRequestHeaders.Authorization = GetAuthJwtTokenFromKeyStore().Result;
             
             
@@ -93,6 +93,19 @@ namespace PasswordManagerApp.Services
             var responseString = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<T>(responseString);
+        }
+        public async Task<ApiResponse> HandleLoginShare(ShareLoginModel model)
+        {
+            HttpResponseMessage response;
+            
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            
+            response = await _client.PostAsync("logindatas/share", content);
+           
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<ApiResponse>(responseString);
         }
         public async Task<bool> DeleteData<T>(int id)
         {

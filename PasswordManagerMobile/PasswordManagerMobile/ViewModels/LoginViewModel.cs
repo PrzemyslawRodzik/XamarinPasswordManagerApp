@@ -91,6 +91,7 @@ namespace PasswordManagerMobile.ViewModels
             {
                await SecureStorage.SetAsync(StorageConstants.UserId, apiResponse.UserId.ToString());
                await SecureStorage.SetAsync(StorageConstants.UserPassword, Password);
+               await SecureStorageHelper.SaveUserEmail(Email);
                 
                 IsBusy = false;
                 await App.Current.MainPage.Navigation.PushModalAsync(new TwoFactorPage());
@@ -106,7 +107,7 @@ namespace PasswordManagerMobile.ViewModels
             }
             
 
-            await SecureStorageHelper.SaveUserData(apiResponse,userInfo.Identity.Name, Password);
+            await SecureStorageHelper.SaveUserData(apiResponse,userInfo.Identity.Name, Password,Email);
            
             
             App.Current.MainPage = new NavigationPage(new ItemsPage());

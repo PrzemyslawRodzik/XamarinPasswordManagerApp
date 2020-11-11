@@ -10,7 +10,7 @@
     <ContentPage.Content>
         
         <StackLayout Padding="10,0,10,60" VerticalOptions="Center">
-            <ActivityIndicator IsVisible="{Binding IsBusy}" IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}}" />
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
             <Entry  Text="{Binding Email}"  Placeholder="Enter email"
        MaxLength="40"
        IsSpellCheckEnabled="false"

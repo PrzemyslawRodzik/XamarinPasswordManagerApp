@@ -9,6 +9,7 @@ namespace PasswordManagerMobile.Configuration
        public const string AccessToken = "Access_token";
        public const string AccessTokenExpireTime = "JWTExpireTime";
        public const string UserId = "UserId";
+       public const string Email = "Email";
        public const string UserPassword = "UserPassword";
        
     }

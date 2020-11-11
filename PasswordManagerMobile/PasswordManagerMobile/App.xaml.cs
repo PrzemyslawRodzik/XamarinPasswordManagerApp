@@ -58,7 +58,7 @@ namespace PasswordManagerMobile
 
         protected override void OnStart()
         {
-            
+            //SecureStorageHelper.ClearData();
         }
 
         protected override void OnSleep()

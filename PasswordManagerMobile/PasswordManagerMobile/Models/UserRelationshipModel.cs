@@ -2,6 +2,6 @@
 {
     public class UserRelationshipModel
     {
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
     }
 }

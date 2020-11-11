@@ -28,7 +28,17 @@ namespace PasswordManagerMobile.Models
         [JsonProperty("modifiedDate")]
         public DateTime ModifiedDate { get; set; }
 
-      
+        public new int? UserId { get; set; }
+
+
+
+
+
+
+
+
+
+
 
 
 
