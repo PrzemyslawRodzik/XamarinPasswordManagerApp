@@ -36,7 +36,7 @@ namespace PasswordManagerMobile.ViewModels
         private async void OnSendTokenClicked(object obj)
         {
             if (SecureStorageHelper.CheckIfUserSessionIsActive().Result)
-                App.Current.MainPage = new NavigationPage(new AboutPage());
+                App.Current.MainPage = new NavigationPage(new ItemsPage());
             if (string.IsNullOrEmpty(Token))
             {
                 MessagingCenter.Send(this, "AuthError", "Token cannot be empty.");
@@ -44,10 +44,10 @@ namespace PasswordManagerMobile.ViewModels
             }
 
 
-
+            IsBusy = true;
             
             ApiTwoFactorResponse apiResponse = await _apiService.TwoFactorLogIn(await SecureStorageHelper.GetUserId(), Token);
-
+            IsBusy = false;
 
             if (apiResponse.VerificationStatus != 1)
             {
@@ -66,7 +66,7 @@ namespace PasswordManagerMobile.ViewModels
                 }
             }
 
-
+            IsBusy = true;
             if (!_jwtHelper.ValidateToken(apiResponse.AccessToken, out _))
             {
                 // indicate errors 
@@ -78,8 +78,14 @@ namespace PasswordManagerMobile.ViewModels
 
             await SecureStorageHelper.SaveUserData(apiResponse);
 
+
+
+            //App.Current.MainPage.Navigation.InsertPageBefore(new ItemsPage(), TwoFactorPage);
+           // await Navigation.PopAsync();
+
             await App.Current.MainPage.Navigation.PopModalAsync();
-            App.Current.MainPage = new NavigationPage(new AboutPage());
+            IsBusy = false;
+            App.Current.MainPage = new NavigationPage(new ItemsPage());
 
 
 

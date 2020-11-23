@@ -2,16 +2,98 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PasswordManagerMobile.Views.NewItemPage"
+             xmlns:local="clr-namespace:PasswordManagerMobile.Events"
              Shell.PresentationMode="ModalAnimated"
              Title="New login data">
     <ContentPage.Content>
         <StackLayout Spacing="3" Padding="15">
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
             <Label Text="Name" FontSize="Medium" />
             <Entry Text="{Binding Name, Mode=TwoWay}" FontSize="Medium" />
             <Label Text="Login" FontSize="Medium" />
             <Editor Text="{Binding Login, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
             <Label Text="Password" FontSize="Medium" />
-            <Editor Text="{Binding Password, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Entry Text="{Binding Password, Mode=TwoWay}"  FontSize="Medium" Margin="0" 
+                     IsPassword="{Binding Source={x:Reference ShowPasswordActualTrigger}, Path=HidePassword}" 
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="4"
+                    />
+
+
+
+                <Label Text="&#xf14a;" 
+           FontSize="20"
+           
+           VerticalOptions="Center" 
+           HorizontalOptions="Center" 
+               Grid.Column="1"
+                   Grid.ColumnSpan="1" >
+                    <Label.FontFamily>
+                        <OnPlatform 
+ x:TypeArguments="x:String"
+ Android="Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free Solid" />
+                    </Label.FontFamily>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding HibpCheckCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+
+
+                <Label Text="&#xf084;" 
+           FontSize="20"
+           VerticalOptions="Center" 
+           HorizontalOptions="Center" 
+               Grid.Column="2"
+                   Grid.ColumnSpan="1"  >
+                    <Label.FontFamily>
+                        <OnPlatform 
+ x:TypeArguments="x:String"
+ Android="Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free Solid" />
+                    </Label.FontFamily>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GeneratePasswordCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+
+                <ImageButton VerticalOptions="Center"
+                      Margin="0,0,5,0"
+                     HeightRequest="20"
+                     Source="ic_eye_hide" Grid.Row="0"
+                   Grid.Column="3"
+                   Grid.ColumnSpan="1"
+                   HorizontalOptions="End">
+                    <ImageButton.Triggers>
+                        <EventTrigger Event="Clicked">
+                            <local:ShowPasswordTriggerAction ShowIcon="ic_eye"
+                                                                    HideIcon="ic_eye_hide"
+                                                                    x:Name="ShowPasswordActualTrigger"/>
+                        </EventTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
+            </Grid>
+
+            <Label Text="{Binding HibpResult}" FontSize="Small" TextColor="OrangeRed" />
+
+
+
+
+
+
+
+
+
+
+
             <Label Text="Website" FontSize="Medium" />
             <Editor Text="{Binding Website, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
             <Label Text="Email" FontSize="Medium" />
@@ -19,7 +101,9 @@
             <StackLayout Orientation="Horizontal">
                 <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
                 <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+                
             </StackLayout>
+           
         </StackLayout>
     </ContentPage.Content>
     

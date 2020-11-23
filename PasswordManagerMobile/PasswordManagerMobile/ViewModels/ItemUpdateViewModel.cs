@@ -24,6 +24,7 @@ namespace PasswordManagerMobile.ViewModels
         private string password;
         private string website;
         private string email;
+        private string hibpResult;
         
         
         public string Id { get; set; }
@@ -68,7 +69,8 @@ namespace PasswordManagerMobile.ViewModels
 
         private async void OnSave()
         {
-            LoginData newLoginData = new LoginData()
+            IsBusy = true;
+              LoginData newLoginData = new LoginData()
             {   Id = Int32.Parse(Id),
                 Name = Name,
                 Login = Login,
@@ -79,7 +81,7 @@ namespace PasswordManagerMobile.ViewModels
             };
 
             await DataStore.UpdateItemAsync(newLoginData);
-
+            IsBusy = false;
             // This will pop the current page off the navigation stack
             await App.Current.MainPage.Navigation.PopModalAsync();
         }
@@ -108,12 +110,22 @@ namespace PasswordManagerMobile.ViewModels
         public string Password
         {
             get => password;
-            set => SetProperty(ref password, value);
+            set {
+                HibpResult = "";
+                SetProperty(ref password, value);
+            } 
+                
+                
         }
         public string Email
         {
             get => email;
             set => SetProperty(ref email, value);
+        }
+        public string HibpResult
+        {
+            get => hibpResult;
+            set => SetProperty(ref hibpResult, value);
         }
 
         public int ItemId
@@ -154,16 +166,13 @@ namespace PasswordManagerMobile.ViewModels
         
         public void OnHibpCheck()
         {
-            
-            
-
-
+            IsBusy = true;
             var hibpResult = PwnedPasswords.IsPasswordPwnedAsync(password, new CancellationToken(), null);
-            
+            IsBusy = false;
             if (hibpResult <= 0)
-                Password =  "Your password is OK :)";
+                HibpResult =  "Your password is OK :)";
             else
-                Password =  $"Your password have been pwned {hibpResult}. Please, change your password.";
+                HibpResult =  $"Your password have been pwned {hibpResult}. Please, change your password.";
            
         }
 

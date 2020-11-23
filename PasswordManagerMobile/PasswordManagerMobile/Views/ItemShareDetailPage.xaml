@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PasswordManagerMobile.Views.ItemDetailPage"
+             x:Class="PasswordManagerMobile.Views.ItemShareDetailPage"
              xmlns:local="clr-namespace:PasswordManagerMobile.Events"
              Title="{Binding Title}">
 
@@ -14,8 +14,6 @@
         <Label Text="Login:" FontSize="Medium" />
         <Label Text="{Binding Login}" FontSize="Small"/>
         <Label Text="Password:" FontSize="Medium" />
-
-
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="7*"/>
@@ -79,31 +77,20 @@
 
 
 
-            
+
 
 
 
 
 
         </Grid>
-
-
-
-
-
-       
         <Label Text="Website:" FontSize="Medium" />
         <Label Text="{Binding Website}" FontSize="Small"/>
         <Label Text="Email:" FontSize="Medium" />
         <Label Text="{Binding Email}" FontSize="Small"/>
-        <Button Text="Update" Command="{Binding UpdateCommand}"/>
-        <Button Text="Share" Command="{Binding ShareCommand}"/>
-
-
-
+        <Label Text="Expire date:" FontSize="Medium" />
+        <Label Text="{Binding ExpireDate}" FontSize="Small"/>
         
-
-
     </StackLayout>
     
 </ContentPage>

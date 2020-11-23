@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
+             Title="{Binding Title}"
              x:Class="PasswordManagerMobile.Views.LoginPage"
-             Shell.NavBarIsVisible="False">
+             >
+
     
-    <ContentPage.Content>
+
+        <ContentPage.Content>
         
         <StackLayout Padding="10,0,10,60" VerticalOptions="Center">
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
@@ -16,6 +16,8 @@
        IsSpellCheckEnabled="false"
        IsTextPredictionEnabled="True"
        IsPassword="False" />
+            <Label Text="{Binding EmailError}" FontSize="Small" TextColor="OrangeRed" />
+            
             <Entry Text="{Binding Password}" Placeholder="Enter password"
        MaxLength="40"
        IsSpellCheckEnabled="false"

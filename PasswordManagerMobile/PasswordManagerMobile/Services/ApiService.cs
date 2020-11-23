@@ -36,8 +36,9 @@ namespace PasswordManagerApp.Services
                 return true;
             }
             });
-            _client.BaseAddress = new Uri("https://192.168.1.100:5006/api/");
-           // _client.BaseAddress = new Uri("https://10.0.2.2:5006/api/");
+            //_client.BaseAddress = new Uri("https://192.168.1.100:5006/api/"); // lan
+           // _client.BaseAddress = new Uri("https://192.168.1.101:5006/api/"); // wifi
+            _client.BaseAddress = new Uri("https://10.0.2.2:5006/api/"); // emulator
             _client.DefaultRequestHeaders.Authorization = GetAuthJwtTokenFromKeyStore().Result;
             
             
@@ -64,6 +65,14 @@ namespace PasswordManagerApp.Services
             if (response.IsSuccessStatusCode)
                 return true;
             return false;
+        }
+        public IEnumerable<SharedLoginModel> GetSharedLogins(string userId)
+        {
+
+            var response = _client.GetAsync($"logindatas/share?userId={userId}").Result;
+
+            var responseString = response.Content.ReadAsStringAsync().Result;
+            return JsonConvert.DeserializeObject<IEnumerable<SharedLoginModel>>(responseString);
         }
 
         public async Task<Dictionary<string,int>> GetUserStatisticData()

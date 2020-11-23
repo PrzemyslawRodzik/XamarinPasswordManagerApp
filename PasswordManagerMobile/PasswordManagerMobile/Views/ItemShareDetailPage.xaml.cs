@@ -5,19 +5,19 @@ using PasswordManagerMobile.Models;
 
 namespace PasswordManagerMobile.Views
 {
-    public partial class ItemDetailPage : ContentPage
+    public partial class ItemShareDetailPage : ContentPage
     {
-        ItemDetailViewModel _viewModel;
+        ItemShareDetailViewModel _viewModel;
 
-        public ItemDetailPage(int id)
+        public ItemShareDetailPage(SharedLoginModel item)
         {
             
             InitializeComponent();
-            MessagingCenter.Subscribe<ItemDetailViewModel, string>(this, "DetailNotify", (sender, message) =>
+            MessagingCenter.Subscribe<ItemShareDetailViewModel, string>(this, "ShareDetailNotify", (sender, message) =>
             {
-                DisplayAlert("",message, "Ok");
+                DisplayAlert("", message, "Ok");
             });
-            BindingContext = _viewModel = new ItemDetailViewModel(id);
+            BindingContext = _viewModel = new ItemShareDetailViewModel(item);
         }
         protected override void OnAppearing()
         {

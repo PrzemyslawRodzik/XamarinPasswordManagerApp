@@ -23,12 +23,14 @@ namespace PasswordManagerMobile.ViewModels
         private readonly JwtHelper _jwtHelper;
 
         private string email;
+        private string emailError;
         private string password;
         private bool isRunning;
 
 
         public LoginViewModel(ApiService apiService)
         {
+            Title = "Authenticate";
             LoginCommand = new Command(OnLoginClicked, CanExecute);
             _apiService = apiService;
             _jwtHelper = new JwtHelper();
@@ -48,7 +50,16 @@ namespace PasswordManagerMobile.ViewModels
         public string Email
         {
             get => email;
-            set => SetProperty(ref email, value);
+            set
+            {
+                EmailError = "";
+                SetProperty(ref email, value);
+            }
+        }
+        public string EmailError
+        {
+            get => emailError;
+            set => SetProperty(ref emailError, value);
         }
 
         public string Password
@@ -66,17 +77,21 @@ namespace PasswordManagerMobile.ViewModels
 
         private async void OnLoginClicked(object obj)
         {
-            IsBusy = true;
+            
 
             bool sessionIsActive = await SecureStorageHelper.CheckIfUserSessionIsActive();
             if (sessionIsActive)
-                App.Current.MainPage = new NavigationPage(new AboutPage());
+                App.Current.MainPage = new NavigationPage(new ItemsPage());
             AuthResponse apiResponse;
 
-           
-            // UserDialogs.Instance.ShowLoading("Authenticating");
-            
-               apiResponse = await _apiService.LogIn(new LoginModel { Email = Email,Password = Password});
+           if( !( Email.Contains("@") && Email.Contains(".") ) )
+            {
+                EmailError = "Please enter valid email!";
+                return;
+            }
+            IsBusy = true;
+
+            apiResponse = await _apiService.LogIn(new LoginModel { Email = Email,Password = Password});
             
             
 

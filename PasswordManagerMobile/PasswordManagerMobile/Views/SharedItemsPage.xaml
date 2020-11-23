@@ -1,49 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PasswordManagerMobile.Views.ItemsPage"
+             x:Class="PasswordManagerMobile.Views.SharedItemsPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:PasswordManagerMobile.ViewModels"  
              xmlns:model="clr-namespace:PasswordManagerMobile.Models"  
-             x:Name="BrowseItemsPage">
+             >
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" IsEnabled="{Binding IsBusy}" />
-        <ToolbarItem  Text="Shared data" Command="{Binding LoadSharedItemsCommand}" IsEnabled="{Binding IsBusy}" />
-        <ToolbarItem  Text="About us" Order="Secondary"  Priority="1"  />
-        <ToolbarItem  Text="Logout" Order="Secondary"  Priority="2" Command="{Binding LogoutCommand}" IsEnabled="{Binding IsBusy}" />
-        
-    </ContentPage.ToolbarItems>
+    
     
     <!--
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
       https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
     -->
-    <RefreshView x:DataType="local:LoginDataViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-        <CollectionView x:Name="ItemsListView"
+    
+    <RefreshView x:DataType="local:ItemShareViewModel" Command="{Binding LoadSharedItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <CollectionView x:Name="SharedItemsListView"
                 ItemsSource="{Binding Items}"
                 SelectionMode="None">
+            
             <CollectionView.ItemTemplate>
+                
                 <DataTemplate>
-                    <StackLayout Padding="10" x:DataType="model:LoginData">
-                        <Label Text="{Binding Name}" 
+                    
+                    <StackLayout Padding="10" x:DataType="model:SharedLoginModel">
+                        
+                        <Label Text="{Binding LoginData.Name}" 
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="16" />
-                        <Label Text="{Binding Website}" 
+                        <Label Text="{Binding LoginData.Website}" 
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="13" />
                         <StackLayout.GestureRecognizers>
                             <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:LoginDataViewModel}}, Path=ItemTapped}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemShareViewModel}}, Path=ItemTapped}"
                                 
                                 CommandParameter="{Binding .}">
                             </TapGestureRecognizer>
                             <SwipeGestureRecognizer 
                                 Direction="Left"  
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:LoginDataViewModel}}, Path=ItemSwiped}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemShareViewModel}}, Path=ItemSwiped}"
                                 
                                 CommandParameter="{Binding .}"
                                 
@@ -53,8 +52,12 @@
 
                         </StackLayout.GestureRecognizers>
                     </StackLayout>
+                    
+                    
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
     </RefreshView>
+    
 </ContentPage>
+

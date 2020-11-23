@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PasswordManagerMobile.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace PasswordManagerMobile.Services
         Task<bool> DeleteItemAsync(int id);
         Task<T> GetItemAsync(int id);
         Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
+        Task<IEnumerable<SharedLoginModel>> GetSharedItems(bool forceRefresh = false);
 
     }
 }

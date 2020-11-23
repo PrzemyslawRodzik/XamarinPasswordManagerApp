@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Class="PasswordManagerMobile.Views.ItemShareAddPage"
+             Shell.PresentationMode="ModalAnimated"
+             Title="Share login data">
+    <ContentPage.Content>
+        <StackLayout Spacing="3" Padding="15">
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+            <Label Text="Receiver" FontSize="Medium" />
+            <Entry Text="{Binding ReceiverEmail, Mode=TwoWay}" FontSize="Medium" />
+            <Label Text="{Binding EmailError}" FontSize="Small" TextColor="OrangeRed" />
+            <Label Text="Expire date" FontSize="Medium" />
+
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    
+                </Grid.ColumnDefinitions>
+                
+            <DatePicker x:Name="_shareDatePicker"
+                    
+                     Date="{Binding ExpireDate, Mode=TwoWay}"   
+                    Grid.Row="0"
+                   Grid.Column="0"
+                   
+                    
+                    />
+            <TimePicker x:Name="_timePicker"
+                    Time="{Binding SelectedTime}"
+                    Format="t"
+                   Grid.Column="1"
+                   
+                     />
+
+            </Grid>
+
+
+
+
+
+
+            <Label Text="{Binding ExpireDateResult}" FontSize="Small" TextColor="OrangeRed" />
+           
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button Text="Share" Command="{Binding ShareCommand}" HorizontalOptions="FillAndExpand"></Button>
+            </StackLayout>
+            
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>

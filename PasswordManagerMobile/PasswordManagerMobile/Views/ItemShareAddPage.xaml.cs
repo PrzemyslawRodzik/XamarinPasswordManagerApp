@@ -5,18 +5,18 @@ using PasswordManagerMobile.Models;
 
 namespace PasswordManagerMobile.Views
 {
-    public partial class ItemSharePage : ContentPage
+    public partial class ItemShareAddPage : ContentPage
     {
 
-        public ItemSharePage(int id)
+        public ItemShareAddPage(int id)
         {
 
             InitializeComponent(); 
-            MessagingCenter.Subscribe<ItemShareViewModel, string>(this, "ShareNotify", (sender, message) =>
+            MessagingCenter.Subscribe<ItemShareAddViewModel, string>(this, "ShareNotify", (sender, message) =>
             {
                 DisplayAlert("ShareNotify", message, "Ok");
             });
-            BindingContext = new ItemShareViewModel(id);
+            BindingContext = new ItemShareAddViewModel(id);
 
 
 

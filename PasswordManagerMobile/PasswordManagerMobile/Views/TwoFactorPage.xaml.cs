@@ -11,7 +11,7 @@ using Xamarin.Forms.Xaml;
 
 namespace PasswordManagerMobile.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
+    
     public partial class TwoFactorPage : ContentPage
     {
         public TwoFactorPage()

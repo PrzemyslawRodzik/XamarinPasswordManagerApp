@@ -12,21 +12,7 @@ namespace PasswordManagerMobile.Helpers
 {
    public class SecureStorageHelper
     {
-
-
-        public static async Task<Task> SaveUserData(AuthResponse authResponse, string password,string email)
-        {
-            await SecureStorage.SetAsync(StorageConstants.AccessToken, authResponse.AccessToken.JwtToken);
-            await SecureStorage.SetAsync(StorageConstants.AccessTokenExpireTime, authResponse.AccessToken.Expire.ToString());
-            await SecureStorage.SetAsync(StorageConstants.UserPassword,password);
-            
-            Application.Current.Properties[StorageConstants.Email] = email;
-            await Application.Current.SavePropertiesAsync();
-            return Task.CompletedTask;
-
-        }
-        public static async Task<Task> SaveUserData(AuthResponse authResponse,string userInfo, string password,string email)
-        {
+        public static async Task<Task> SaveUserData(AuthResponse authResponse,string userInfo, string password,string email){
             await SecureStorage.SetAsync(StorageConstants.AccessToken, authResponse.AccessToken.JwtToken);
             await SecureStorage.SetAsync(StorageConstants.AccessTokenExpireTime, authResponse.AccessToken.Expire.ToString());
             await SecureStorage.SetAsync(StorageConstants.UserId, userInfo);
@@ -42,6 +28,17 @@ namespace PasswordManagerMobile.Helpers
             return Task.CompletedTask;
 
         }
+        public static async Task<Task> SaveUserData(AuthResponse authResponse, string password, string email)
+        {
+            await SecureStorage.SetAsync(StorageConstants.AccessToken, authResponse.AccessToken.JwtToken);
+            await SecureStorage.SetAsync(StorageConstants.AccessTokenExpireTime, authResponse.AccessToken.Expire.ToString());
+            await SecureStorage.SetAsync(StorageConstants.UserPassword, password);
+
+            Application.Current.Properties[StorageConstants.Email] = email;
+            await Application.Current.SavePropertiesAsync();
+            return Task.CompletedTask;
+
+        }
         public static async  Task<Task> SaveUserEmail(string email)
         {
             Application.Current.Properties[StorageConstants.Email] = email;
@@ -49,8 +46,6 @@ namespace PasswordManagerMobile.Helpers
             return Task.CompletedTask;
 
         }
-        
-
         public static async Task<int> GetUserId()
         {
             var idUser = await SecureStorage.GetAsync(StorageConstants.UserId);
@@ -68,8 +63,6 @@ namespace PasswordManagerMobile.Helpers
             var key = await SecureStorage.GetAsync(StorageConstants.UserPassword);
             return key;
         }
-
-
         public static async Task<bool> CheckIfUserSessionIsActive()
         {
             try

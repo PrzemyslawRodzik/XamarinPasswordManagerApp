@@ -1,43 +1,42 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
+using PasswordManagerApp.Handlers;
 using PasswordManagerMobile.Helpers;
 using PasswordManagerMobile.Models;
 using PasswordManagerMobile.Views;
-using Xamarin.Forms;
 using Xamarin.Essentials;
-using PasswordManagerApp.Handlers;
-using System.Threading;
+using Xamarin.Forms;
 
 namespace PasswordManagerMobile.ViewModels
 {
-    [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    public class ItemDetailViewModel : BaseViewModel
+    
+    public class ItemShareDetailViewModel : BaseViewModel
     {
         
-        private int itemId;
+        private SharedLoginModel sharedItem;
+        public Command HibpCheckCommand { get; set; }
+        public Command CopyCommand { get; set; }
+
         private string name;
         private string login;
         private string password;
         private string website;
         private string email;
+        private string expireDate;
         
         
         public string Id { get; set; }
-        public Command UpdateCommand { get; }
-        public Command ShareCommand { get; set; }
-        public Command CopyCommand { get; set; }
-        public Command HibpCheckCommand { get; set; }
+        
 
-        public ItemDetailViewModel(int itemId)
+        public ItemShareDetailViewModel(SharedLoginModel sharedItem)
         {
-            ItemId = itemId;
-            UpdateCommand = new Command(OnUpdateItem, CanExecute);
-            this.PropertyChanged +=
-                 (_, __) => UpdateCommand.ChangeCanExecute();
-            ShareCommand = new Command(OnShareItem);
+            SharedItem = sharedItem;
             CopyCommand = new Command(OnCopy);
             HibpCheckCommand = new Command(OnHibpCheck);
+
+
 
 
         }
@@ -45,7 +44,7 @@ namespace PasswordManagerMobile.ViewModels
         public void OnAppearing()
         {
             IsBusy = true;
-            LoadItemId(ItemId);
+            LoadSharedItem(SharedItem);
             IsBusy = false;
         }
         private bool CanExecute()
@@ -79,31 +78,37 @@ namespace PasswordManagerMobile.ViewModels
             get => email;
             set => SetProperty(ref email, value);
         }
+        public string ExpireDate
+        {
+            get => expireDate;
+            set => SetProperty(ref expireDate, value);
+        }
 
-        public int ItemId
+        public SharedLoginModel SharedItem
         {
             get
             {
-                return itemId;
+                return sharedItem;
             }
             set
             {
-                itemId = value;
-                LoadItemId(value);
+                sharedItem = value;
+                LoadSharedItem(value);
             }
         }
         #endregion
-        public async void LoadItemId(int itemId)
+        public  void LoadSharedItem(SharedLoginModel item)
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
-                Id = item.Id.ToString();
-                Name = item.Name;
-                Login = item.Login;
-                Password = EncService.Decrypt(SecureStorageHelper.GetUserKey().Result,item.Password);
-                Website = item.Website;
-                Email = item.Email;
+                
+                Id = item.LoginData.Id.ToString();
+                Name = item.LoginData.Name;
+                Login = item.LoginData.Login;
+                Password = EncService.Decrypt(App.AppSettings.SecretEncryptionKey, item.LoginData.Password);
+                Website = item.LoginData.Website;
+                Email = item.LoginData.Email;
+                ExpireDate = item.EndDate.ToString();
                 
             }
             catch (Exception)
@@ -111,40 +116,29 @@ namespace PasswordManagerMobile.ViewModels
                 Debug.WriteLine("Failed to Load Item");
             }
         }
-        private async void OnUpdateItem()
-        {
-            IsBusy = true;
-            await App.Current.MainPage.Navigation.PushModalAsync(new ItemUpdatePage(ItemId));
-            IsBusy = false;
-        }
-        private async void OnShareItem()
-        {
-            IsBusy = true;
-            await App.Current.MainPage.Navigation.PushModalAsync(new ItemShareAddPage(ItemId));
-            IsBusy = false;
-        }
         private void OnCopy()
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await Clipboard.SetTextAsync(Password);
-                MessagingCenter.Send(this, "DetailNotify", "Your password has been copied to clipboard.");
+                MessagingCenter.Send(this, "ShareDetailNotify", "Your password has been copied to clipboard.");
 
             });
         }
-        
+
         private void OnHibpCheck()
         {
             IsBusy = true;
             var hibpResult = PwnedPasswords.IsPasswordPwnedAsync(password, new CancellationToken(), null);
             IsBusy = false;
             if (hibpResult <= 0)
-                MessagingCenter.Send(this, "DetailNotify", "Your password is Ok :)");
+                MessagingCenter.Send(this, "ShareDetailNotify", "Your password is Ok :)");
             else
-                MessagingCenter.Send(this, "DetailNotify", $"Your password have been pwned {hibpResult}. Please, change your password.");
-            
+                MessagingCenter.Send(this, "ShareDetailNotify", $"Your password have been pwned {hibpResult}. Please, change your password.");
+
 
         }
+
 
 
 

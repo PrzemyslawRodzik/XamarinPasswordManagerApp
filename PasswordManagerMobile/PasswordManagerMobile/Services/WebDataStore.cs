@@ -17,12 +17,19 @@ namespace PasswordManagerMobile.Services
         {
             _apiService = new ApiService();
             var tempItems = _apiService.GetAllUserData<LoginData>(SecureStorageHelper.GetUserId().Result).Result;
-            items = tempItems.ToList();
-           
-            
+            if(!(tempItems is null) )
+                items = tempItems.ToList();
+
+
+
         }
        
         public async Task<LoginData> GetItemAsync(int id)
+        {
+            var item = items.FirstOrDefault(x => x.Id == id);
+            return await Task.FromResult(item);
+        }
+        public async Task<LoginData> GetSharedItemAsync(int id)
         {
             var item = items.FirstOrDefault(x => x.Id == id);
             return await Task.FromResult(item);
@@ -34,6 +41,21 @@ namespace PasswordManagerMobile.Services
             return await Task.FromResult(items);
              
         }
+        public async Task<IEnumerable<SharedLoginModel>> GetSharedItems(bool forceRefresh = false)
+        {
+            // return await Task.FromResult(items);
+
+            var sharedLogins = _apiService.GetSharedLogins(SecureStorageHelper.GetUserId().Result.ToString()).ToList();
+            return await Task.FromResult(sharedLogins);
+
+            
+
+        }
+
+
+
+
+        
         public async Task<bool> AddItemAsync(LoginData item)
         {
             

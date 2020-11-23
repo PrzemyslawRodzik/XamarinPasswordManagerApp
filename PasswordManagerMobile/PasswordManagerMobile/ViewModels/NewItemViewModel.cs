@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Windows.Input;
+using PasswordGenerator;
+using PasswordManagerApp.Handlers;
 using PasswordManagerApp.Services;
 using PasswordManagerMobile.Helpers;
 using PasswordManagerMobile.Models;
@@ -24,6 +27,8 @@ namespace PasswordManagerMobile.ViewModels
             CancelCommand = new Command(OnCancel);
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
+            GeneratePasswordCommand = new Command(OnGeneratePassword);
+            HibpCheckCommand = new Command(OnHibpCheck);
         }
 
         private bool ValidateSave()
@@ -47,10 +52,20 @@ namespace PasswordManagerMobile.ViewModels
             get => login;
             set => SetProperty(ref login, value);
         }
+        private string hibpResult;
+        public string HibpResult
+        {
+            get => hibpResult;
+            set => SetProperty(ref hibpResult, value);
+        }
         public string Password
         {
             get => password;
-            set => SetProperty(ref password, value);
+            set
+            {
+                HibpResult = "";
+                SetProperty(ref password, value);
+            }
         }
         public string Email
         {
@@ -66,6 +81,8 @@ namespace PasswordManagerMobile.ViewModels
 
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
+        public Command GeneratePasswordCommand { get; }
+        public Command HibpCheckCommand { get; }
 
         private async void OnCancel()
         {
@@ -89,6 +106,23 @@ namespace PasswordManagerMobile.ViewModels
 
             // This will pop the current page off the navigation stack
             await App.Current.MainPage.Navigation.PopModalAsync();
+
+        }
+        private void OnGeneratePassword()
+        {
+            Password = new Password(true, true, true, true, 16).Next();
+        }
+
+        public void OnHibpCheck()
+        {
+            IsBusy = true;
+            var hibpResult = PwnedPasswords.IsPasswordPwnedAsync(password, new CancellationToken(), null);
+            IsBusy = false;
+            if (hibpResult <= 0)
+                HibpResult = "Your password is OK :)";
+            else
+                HibpResult = $"Your password have been pwned {hibpResult}. Please, change your password.";
+
         }
     }
 }

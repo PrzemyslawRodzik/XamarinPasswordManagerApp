@@ -19,10 +19,12 @@ namespace PasswordManagerMobile.ViewModels
         public ObservableCollection<LoginData> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
+        public Command LogoutCommand { get; }
         
         public Command<LoginData> ItemTapped { get; }
         public Command<LoginData> ItemSwiped { get; }
-        
+        public Command LoadSharedItemsCommand { get; }
+
         
 
         public LoginDataViewModel()
@@ -43,6 +45,10 @@ namespace PasswordManagerMobile.ViewModels
             AddItemCommand = new Command(OnAddItem,CanExecute);
             this.PropertyChanged +=
                  (_, __) => AddItemCommand.ChangeCanExecute();
+            LoadSharedItemsCommand = new Command(OnLoadSharedItems, CanExecute);
+            this.PropertyChanged +=
+                 (_, __) => LoadSharedItemsCommand.ChangeCanExecute();
+            LogoutCommand = new Command(OnLogout);
 
         }
         private bool CanExecute(object obj)
@@ -80,6 +86,7 @@ namespace PasswordManagerMobile.ViewModels
         public void OnAppearing()
         {
             IsBusy = true;
+            ExecuteLoadItemsCommand();
             SelectedItem = null;
              
         }
@@ -103,13 +110,23 @@ namespace PasswordManagerMobile.ViewModels
          
         private  void OnAddItem(object obj)
         {
+            
             IsBusy = true;
             
             App.Current.MainPage.Navigation.PushModalAsync(new NewItemPage());
             IsBusy = false;
                
         }
-        
+        private void OnLogout(object obj)
+        {
+
+            IsBusy = true;
+            SecureStorageHelper.ClearData();
+            App.Current.MainPage = new NavigationPage(new LoginPage());
+            IsBusy = false;
+
+        }
+
 
         async void OnItemSelected(LoginData item)
         {   if (IsBusy)
@@ -119,9 +136,6 @@ namespace PasswordManagerMobile.ViewModels
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
-            // await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
-
             IsBusy = false;
             await App.Current.MainPage.Navigation.PushModalAsync(new ItemDetailPage(item.Id));
         }
@@ -130,5 +144,14 @@ namespace PasswordManagerMobile.ViewModels
             
             await App.Current.MainPage.Navigation.PushModalAsync(new ItemDetailPage(item.Id));
         }
+        async void OnLoadSharedItems(object obj)
+        {
+            IsBusy = true;
+            await App.Current.MainPage.Navigation.PushAsync(new SharedItemsPage());
+            IsBusy = false;
+        }
+
+
+
     }
 }
