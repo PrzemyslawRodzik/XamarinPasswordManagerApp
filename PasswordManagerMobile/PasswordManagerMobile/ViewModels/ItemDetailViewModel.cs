@@ -21,13 +21,14 @@ namespace PasswordManagerMobile.ViewModels
         private string password;
         private string website;
         private string email;
-        
+
         
         public string Id { get; set; }
         public Command UpdateCommand { get; }
         public Command ShareCommand { get; set; }
         public Command CopyCommand { get; set; }
         public Command HibpCheckCommand { get; set; }
+        public Command DeleteCommand { get; set; }
 
         public ItemDetailViewModel(int itemId)
         {
@@ -38,6 +39,7 @@ namespace PasswordManagerMobile.ViewModels
             ShareCommand = new Command(OnShareItem);
             CopyCommand = new Command(OnCopy);
             HibpCheckCommand = new Command(OnHibpCheck);
+            DeleteCommand = new Command(OnDelete);
 
 
         }
@@ -143,6 +145,22 @@ namespace PasswordManagerMobile.ViewModels
             else
                 MessagingCenter.Send(this, "DetailNotify", $"Your password have been pwned {hibpResult}. Please, change your password.");
             
+
+        }
+        private async void OnDelete()
+        {
+            IsBusy = true;
+            var userAnswer = await Application.Current.MainPage.DisplayAlert("", "Are you sure you want to delete this data?", "Yes","No");
+            if (userAnswer)
+            {
+                await DataStore.DeleteItemAsync(Int32.Parse(Id));
+                IsBusy = false;
+                await App.Current.MainPage.Navigation.PopModalAsync();
+            }
+            IsBusy = false;
+
+
+
 
         }
 

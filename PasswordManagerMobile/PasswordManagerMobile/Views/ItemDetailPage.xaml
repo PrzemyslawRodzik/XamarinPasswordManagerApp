@@ -101,9 +101,25 @@
 
 
 
+
+
+
+
+        <Label Text="&#xf1f8;" 
+           FontSize="30"
+               Padding="0,30,5,0"
+           VerticalOptions="End" 
+           HorizontalOptions="End">
+            <Label.FontFamily>
+                <OnPlatform 
+ x:TypeArguments="x:String"
+ Android="Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free Regular" />
+            </Label.FontFamily>
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DeleteCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
         
-
-
     </StackLayout>
     
 </ContentPage>
