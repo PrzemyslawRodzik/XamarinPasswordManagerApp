@@ -24,6 +24,7 @@ namespace PasswordManagerMobile
             DependencyService.Register<WebDataStore>();
             DependencyService.Register<EncryptionService>();
             
+            
             if (SecureStorageHelper.CheckIfUserSessionIsActive().Result)
                 MainPage = new NavigationPage(new ItemsPage());
             else

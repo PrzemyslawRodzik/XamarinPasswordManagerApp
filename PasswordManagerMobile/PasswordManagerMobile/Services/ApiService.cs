@@ -49,7 +49,7 @@ namespace PasswordManagerApp.Services
 
             var jwtToken = await SecureStorage.GetAsync(StorageConstants.AccessToken);
             
-
+            
             return new AuthenticationHeaderValue("Bearer", jwtToken);
         }
            
@@ -57,15 +57,7 @@ namespace PasswordManagerApp.Services
 
 
 
-        public  bool CheckEmailAvailability(string email)
-        {
-            
-            var response = _client.GetAsync($"users/email/check?email={email}").Result;
-
-            if (response.IsSuccessStatusCode)
-                return true;
-            return false;
-        }
+        
         public IEnumerable<SharedLoginModel> GetSharedLogins(string userId)
         {
 
@@ -75,18 +67,13 @@ namespace PasswordManagerApp.Services
             return JsonConvert.DeserializeObject<IEnumerable<SharedLoginModel>>(responseString);
         }
 
-        public async Task<Dictionary<string,int>> GetUserStatisticData()
-        {
-            
-            var response = await _client.GetAsync("statistics/user-data");
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<Dictionary<string,int>>(responseString);
-        }
+        
 
         #region Generic CRUD api calls
         public async Task<T> CreateUpdateData<T>(T entity, int? id = null) where T : class
         {
+            _client.DefaultRequestHeaders.Authorization = GetAuthJwtTokenFromKeyStore().Result;
+            
             HttpResponseMessage response;
             string typeName = typeof(T).Name;
             typeName += "s";
@@ -105,6 +92,8 @@ namespace PasswordManagerApp.Services
         }
         public async Task<ApiResponse> HandleLoginShare(ShareLoginModel model)
         {
+            _client.DefaultRequestHeaders.Authorization = GetAuthJwtTokenFromKeyStore().Result;
+
             HttpResponseMessage response;
             
             StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
@@ -118,6 +107,8 @@ namespace PasswordManagerApp.Services
         }
         public async Task<bool> DeleteData<T>(int id)
         {
+            _client.DefaultRequestHeaders.Authorization = GetAuthJwtTokenFromKeyStore().Result;
+
             HttpResponseMessage response;
             string typeName = typeof(T).Name;
             typeName += "s";
@@ -136,6 +127,8 @@ namespace PasswordManagerApp.Services
 
         public async Task<IEnumerable<T>> GetAllUserData<T>(int userId, int? compromised = null) where T : class
         {
+            _client.DefaultRequestHeaders.Authorization = GetAuthJwtTokenFromKeyStore().Result;
+
             string typeName = typeof(T).Name;
             typeName += "s";
             var response =  _client.GetAsync($"{typeName}?userId={userId}").Result;
@@ -148,38 +141,9 @@ namespace PasswordManagerApp.Services
 
         }
 
-        public  bool CheckUserGuidDeviceInDb(string guidDeviceHash,int userId)
-        {
-            HttpResponseMessage response;
-            StringContent content = new StringContent(JsonConvert.SerializeObject(new {GuidDevice = guidDeviceHash, UserId = userId }), Encoding.UTF8, "application/json");
-            response = _client.PostAsync("users/devices/check-guid", content).Result;
-            if (response.IsSuccessStatusCode)
-                return true;
-            return false;
-        }
+       
 
         
-
-        public void HandleNewDeviceLogIn(string ipAddress, string guidDevice,int userId, string osName, string browserName)
-        {
-            HttpResponseMessage response;
-            StringContent content = new StringContent(JsonConvert.SerializeObject(new { IpAddress = ipAddress, GuidDevice = guidDevice, UserId = userId, OSName = osName, BrowserName = browserName }), Encoding.UTF8, "application/json");
-            response = _client.PostAsync("users/devices/authorize-new-device", content).Result;
-           
-        }
-
-        public async Task<T> GetDataById<T>(int id) where T : class
-        {
-            string typeName = typeof(T).Name;
-            typeName += "s";
-            var response = await _client.GetAsync($"{typeName}/{id}");
-
-            response.EnsureSuccessStatusCode();
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<T>(responseString);
-        }
 
        
 
@@ -228,6 +192,7 @@ namespace PasswordManagerApp.Services
 
         public User GetAuthUser()
         {
+            _client.DefaultRequestHeaders.Authorization = GetAuthJwtTokenFromKeyStore().Result;
 
             var response = _client.GetAsync("users/getauthuser").Result;
             

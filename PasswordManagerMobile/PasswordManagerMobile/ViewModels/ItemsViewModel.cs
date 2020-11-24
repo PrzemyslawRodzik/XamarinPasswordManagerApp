@@ -83,10 +83,11 @@ namespace PasswordManagerMobile.ViewModels
             }
         }
 
-        public void OnAppearing()
+        public async void OnAppearing()
         {
             IsBusy = true;
-            ExecuteLoadItemsCommand();
+            await ExecuteLoadItemsCommand();
+            IsBusy = false;
             SelectedItem = null;
              
         }
@@ -108,22 +109,20 @@ namespace PasswordManagerMobile.ViewModels
         
         
          
-        private  void OnAddItem(object obj)
+        private  async void OnAddItem(object obj)
         {
-            
-            IsBusy = true;
-            
-            App.Current.MainPage.Navigation.PushModalAsync(new NewItemPage());
-            IsBusy = false;
-               
+            await App.Current.MainPage.Navigation.PushModalAsync(new NewItemPage());
+                 
         }
         private void OnLogout(object obj)
         {
 
             IsBusy = true;
             SecureStorageHelper.ClearData();
-            App.Current.MainPage = new NavigationPage(new LoginPage());
+            DataStore.Clear();
             IsBusy = false;
+            App.Current.MainPage = new NavigationPage(new LoginPage());
+            
 
         }
 

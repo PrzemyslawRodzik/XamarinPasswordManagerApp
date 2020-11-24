@@ -105,7 +105,7 @@ namespace PasswordManagerMobile.ViewModels
             await DataStore.AddItemAsync(newLoginData);
 
             // This will pop the current page off the navigation stack
-            await App.Current.MainPage.Navigation.PopModalAsync();
+             await App.Current.MainPage.Navigation.PopModalAsync();
 
         }
         private void OnGeneratePassword()

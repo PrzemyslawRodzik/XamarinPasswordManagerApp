@@ -24,7 +24,7 @@
                 
             <DatePicker x:Name="_shareDatePicker"
                     
-                     Date="{Binding ExpireDate, Mode=TwoWay}"   
+                     Date="{Binding ExpireDate}"   
                     Grid.Row="0"
                    Grid.Column="0"
                    

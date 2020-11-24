@@ -20,7 +20,7 @@ namespace PasswordManagerMobile.ViewModels
     
     public class ItemShareAddViewModel : BaseViewModel
     {
-        private string expireDate;
+        private DateTime expireDate;
         private string receiverEmail;
         private string expireDateResult;
         private TimeSpan selectedTime;
@@ -42,12 +42,13 @@ namespace PasswordManagerMobile.ViewModels
             CancelCommand = new Command(OnCancel);
             this.PropertyChanged +=
                  (_, __) => CancelCommand.ChangeCanExecute();
-           
-            
+            ExpireDate = DateTime.UtcNow.ToLocalTime();
 
 
 
-            
+
+
+
         }
 
         
@@ -56,7 +57,6 @@ namespace PasswordManagerMobile.ViewModels
         {
             
             if (!String.IsNullOrWhiteSpace(receiverEmail)
-                && !String.IsNullOrWhiteSpace(expireDate)
                 && !IsBusy)
             {
                 return true;
@@ -131,10 +131,8 @@ namespace PasswordManagerMobile.ViewModels
 
         private string GetExpireDate()
         {
-            var date = DateTime.Parse(ExpireDate) + selectedTime;
+            var date = ExpireDate + selectedTime;
             var dateS = date.ToString();
-            //string dt = Convert.ToDateTime(ExpireDate + " " + SelectedTime).ToString();
-           // string dt1 = DateTime.ParseExact(ExpireDate + " " + SelectedTime, "dd/MM/yy HH:mm:ss tt", CultureInfo.InvariantCulture).ToString();
             return dateS;
         }
 
@@ -160,7 +158,7 @@ namespace PasswordManagerMobile.ViewModels
             get => emailError;
             set => SetProperty(ref emailError, value);
         }
-        public string ExpireDate
+        public DateTime ExpireDate
         {
             get => expireDate;
             set

@@ -10,7 +10,7 @@ namespace PasswordManagerMobile.Services
 {
     public class WebDataStore : IDataStore<LoginData>
     {
-        readonly List<LoginData> items;
+        List<LoginData> items;
         readonly ApiService _apiService;
 
         public WebDataStore()
@@ -38,6 +38,10 @@ namespace PasswordManagerMobile.Services
 
         public async Task<IEnumerable<LoginData>> GetItemsAsync(bool forceRefresh = false)
         {
+            var tempItems = _apiService.GetAllUserData<LoginData>(SecureStorageHelper.GetUserId().Result).Result;
+            if (!(tempItems is null))
+                items = tempItems.ToList();
+
             return await Task.FromResult(items);
              
         }
@@ -80,6 +84,20 @@ namespace PasswordManagerMobile.Services
             items.Remove(oldItem);
 
             return await Task.FromResult(true);
+        }
+        public bool Clear()
+        {
+            try
+            {
+                items.Clear();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
+            
         }
     }
 }
